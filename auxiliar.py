@@ -1,5 +1,8 @@
 import math
 
+# Pedro Gonçalves Mannarino - 2210617
+# Luiza Marcondes Paes Leme - 2210275
+
 class Coord():
     def __init__(self, x, y, posE, percorrido, pai):
         self.x = x
@@ -10,6 +13,9 @@ class Coord():
         self.pai = pai
         self.filhos = []
 
+    def print(self):
+        print((self.x, self.y, self.posE, self.percorrido, self.heuristica, self.pai, self.filhos))
+
 
 def lerMapa():
     with open("mapa.txt", "r") as arq:
@@ -17,27 +23,65 @@ def lerMapa():
 
     return mapa
 
+
+def criarMapaDinamico(mapa):
+    mapaDinamico = []
+    cont = 0
+    
+    for linha in mapa:
+        mapaDinamico.append([])
+        
+        for coluna in linha:
+            mapaDinamico[cont].append("X") 
+
+        cont += 1
+
+    return mapaDinamico
+
+
+def atualizarMapaDinamico(mapaDinamico, caminho, c):
+    x = 0
+
+    for linha in mapaDinamico:
+        y = 0
+
+        for coluna in linha:
+            if ((x, y) in caminho):
+                mapaDinamico[x][y] = c
+            
+            y += 1
+
+        x += 1
+
+
+def concatenarMapaDinamico(mapaDinamico):
+    cont = 0
+    for linha in mapaDinamico:
+        mapaDinamico[cont] = ''.join(linha)
+        cont += 1
+
 def lerLugares():
     with open("lugares.txt", "r") as arq:
         lugares = [x for x in arq.readline()]
 
     return lugares
 
-def acharPos(mapa, c):
+
+def acharPos(mapa, cI, cE):
     I = None
     E = None
 
     x = 0
     for linha in mapa:
         y = 0
+        
         for coluna in linha:
-            
-            if (mapa[x][y] == 'I'):
+            if (mapa[x][y] == cI):
                 I = (x, y)
                 if (E != None):
                     return I, E
                 
-            if (mapa[x][y] == c):
+            if (mapa[x][y] == cE):
                 E = (x, y)
                 if (I != None):
                     return I, E
@@ -77,21 +121,32 @@ def avaliaCelula(mapa, x, y):
     return 1
 
 
-def avaliaVizinhos(mapa, x, y, pai):
-    vizinhos = []
+def avaliaVizinhos(mapa, pai, conhecidos):
+    if ((pai.x + 1, pai.y) not in conhecidos and validaCelula(mapa, pai.x + 1, pai.y)):
+        pai.filhos.append(Coord(pai.x + 1, pai.y, pai.posE, pai.percorrido + avaliaCelula(mapa, pai.x + 1, pai.y), pai))
+        conhecidos.append((pai.x + 1, pai.y))
 
-    if (validaCelula(mapa, x + 1, y)):
-        vizinhos.append(Coord(x + 1, y, pai.posE, pai.percorrido + avaliaCelula(mapa, x + 1, y), pai))
+    if ((pai.x - 1, pai.y) not in conhecidos and validaCelula(mapa, pai.x - 1, pai.y)):
+        pai.filhos.append(Coord(pai.x - 1, pai.y, pai.posE, pai.percorrido + avaliaCelula(mapa, pai.x - 1, pai.y), pai))
+        conhecidos.append((pai.x - 1, pai.y))
 
-    if (validaCelula(mapa, x - 1, y)):
-        vizinhos.append(Coord(x - 1, y, pai.posE, pai.percorrido + avaliaCelula(mapa, x - 1, y), pai))
+    if ((pai.x, pai.y + 1) not in conhecidos and validaCelula(mapa, pai.x, pai.y + 1)):
+        pai.filhos.append(Coord(pai.x, pai.y + 1, pai.posE, pai.percorrido + avaliaCelula(mapa, pai.x, pai.y + 1), pai))
+        conhecidos.append((pai.x, pai.y + 1))
 
-    if (validaCelula(mapa, x, y + 1)):
-        vizinhos.append(Coord(x, y + 1, pai.posE, pai.percorrido + avaliaCelula(mapa, x, y + 1), pai))
+    if ((pai.x, pai.y - 1) not in conhecidos and validaCelula(mapa, pai.x, pai.y - 1)):
+        pai.filhos.append(Coord(pai.x, pai.y - 1, pai.posE, pai.percorrido + avaliaCelula(mapa, pai.x, pai.y - 1), pai))
+        conhecidos.append((pai.x, pai.y - 1))
 
-    if (validaCelula(mapa, x, y - 1)):
-        vizinhos.append(Coord(x, y + 1, pai.posE, pai.percorrido + avaliaCelula(mapa, x, y - 1), pai))
 
-    pai.filhos = vizinhos
+def acharCaminho(coord, c):
+    lista = [(coord.x, coord.y)]
+
+    while (coord.pai != None):
+        coord = coord.pai
+        lista.insert(0, (coord.x, coord.y))
+    lista.insert(0, c)
+
+    return lista
+        
     
-    return vizinhos

@@ -15,8 +15,31 @@ def tempoTotal(ind, batalhas, herois):
     return tempo
 
 def fitness(ind, batalhas, herois):
+    valor = 1.5 ** (sum(batalhas) - tempoTotal(ind, batalhas, herois))
+    if (not verificaAnt(ind, batalhas, herois)):
+        return valor
+    return valor * 100
 
-    return 1.2 ** (sum(batalhas) - tempoTotal(ind, batalhas, herois))
+def copiaListaDeListas(lista):
+    nova = []
+    for l in lista:
+        nova.append(l.copy())
+    return nova
+
+def verificaAnt(ind, batalhas, herois):
+
+    somaant = 0
+
+    for batalha in batalhas:     
+        soma = 0
+        for n in range(len(herois)):
+            if (batalha in ind[n]):
+                soma += herois[n]
+        if (soma < somaant):
+            return False
+        somaant = soma
+
+    return True
 
 def randomGen(qtd, batalhas, herois):
     
@@ -24,10 +47,10 @@ def randomGen(qtd, batalhas, herois):
 
     # Geração aleatória
     for n in range(qtd):
-
         verificacao = batalhas.copy()
+
         while(verificacao != set()):
-            
+
             ind = []
             verificacao = batalhas.copy()
             h = random.sample(batalhas, 4)
@@ -61,7 +84,10 @@ def mutacao(ind, batalhas):
     return ind
 
 def evolucao(ngens, indsgen, geracao, batalhas, herois):
-    
+
+    sortedgeracao = sorted(geracao, key = lambda x: x[0], reverse = True)
+    melhor = sortedgeracao[0].copy()
+
     for gen in range(ngens):
     
         sortedgeracao = sorted(geracao, key = lambda x: x[0], reverse = True)
@@ -76,10 +102,15 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
 
         novaGeracao = []
 
-        novaGeracao.extend(sortedgeracao[:int(indsgen*0.06)])
+        if (sortedgeracao[0][0] > melhor[0]):
+            melhor = sortedgeracao[0].copy()
+
+        if ((gen + 1) % 50 == 0):
+            novaGeracao.append(melhor)
+        #novaGeracao.extend(sortedgeracao[:int(indsgen*0.06)])
 
 
-        for n in range(int(indsgen*0.86)):
+        for n in range(int(indsgen*0.92)):
             pai = random.choices(sortedgeracao, prob)[0][1]
             mae = random.choices(sortedgeracao, prob)[0][1]
 
@@ -109,7 +140,7 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
 batalhas = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
 herois = [1.1, 1.2, 1.3, 1.4, 1.5]
 ngens = 1500
-indsgen = 400
+indsgen = 300
 batalhas.sort()
 herois.sort()
 
@@ -128,7 +159,7 @@ melhores = []
 #melhores.append([fitness([[45, 65, 55, 50], [75, 45, 70, 60, 50], [80, 90, 70, 85, 60], [55, 85, 90, 80, 95], [40, 35, 65, 95, 75]], batalhas, herois), [[45, 65, 55, 50], [75, 45, 70, 60, 50], [80, 90, 70, 85, 60], [55, 85, 90, 80, 95], [40, 35, 65, 95, 75]]])
 #melhores.append([fitness([[45, 65, 55, 50], [75, 45, 70, 60, 50], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]], batalhas, herois), [[45, 65, 55, 50], [75, 45, 70, 60, 50], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]]])
 #melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]]])
-#melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]]])
+melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]]])
 #melhores.append([fitness(, batalhas, herois), ])
 #melhores.append([fitness(, batalhas, herois), ])
 #melhores.append([fitness(, batalhas, herois), ])
@@ -160,18 +191,20 @@ geracaofinal.extend(geracao3[:int(indsgen*0.25)])
 geracaofinal.extend(geracao4[:int(indsgen*0.25)])
 
 geracaofinal = evolucao(ngens, indsgen, geracaofinal, batalhas, herois)
+print("Ultimo da ultima geracao")
 print(geracaofinal[0][1])
+print(tempoTotal(geracaofinal[0][1], batalhas, herois))
+
 melhor = geracaofinal[0].copy()
 
 for n in range(1000):
-    mutado = mutacao(melhor[1], batalhas)
-    if (fitness(mutado, batalhas, herois) > melhor[0]):
-        melhor[1] = mutado
+    mutado = mutacao(copiaListaDeListas(melhor[1]), batalhas)
+    if (fitness(mutado, batalhas, herois) > melhor[0] and verificaAnt(mutado, batalhas, herois)):
+        melhor[1] = copiaListaDeListas(mutado)
         melhor[0] = fitness(mutado, batalhas, herois)
-        print(melhor[0])
+        print(n)
 
-print(geracaofinal[0][1])
-print(geracaofinal[0][0])
-print(tempoTotal(geracaofinal[0][1], batalhas, herois))
-print(fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois))
-print(tempoTotal([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois))
+print("Melhor pos hill climbing")
+print(melhor[0])
+print(melhor[1])
+print(tempoTotal(melhor[1], batalhas, herois))

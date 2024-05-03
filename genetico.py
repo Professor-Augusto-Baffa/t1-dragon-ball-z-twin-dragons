@@ -16,7 +16,7 @@ def tempoTotal(ind, batalhas, herois):
 
 def fitness(ind, batalhas, herois):
 
-    return 1.1 ** (sum(batalhas) - tempoTotal(ind, batalhas, herois))
+    return 1.2 ** (sum(batalhas) - tempoTotal(ind, batalhas, herois))
 
 def randomGen(qtd, batalhas, herois):
     
@@ -30,11 +30,15 @@ def randomGen(qtd, batalhas, herois):
             
             ind = []
             verificacao = batalhas.copy()
-            ind.append(random.sample(batalhas, 4))
+            h = random.sample(batalhas, 4)
+            h.sort()
+            ind.append(h)
             verificacao = set(verificacao) - set(ind[0])
             
             for i in range(len(herois) - 1):
-                ind.append(random.sample(batalhas, 5))
+                h = random.sample(batalhas, 5)
+                h.sort()
+                ind.append(h)
                 verificacao = set(verificacao) - set(ind[i+1])
 
         geracao.append([fitness(ind, batalhas, herois), ind])
@@ -43,7 +47,6 @@ def randomGen(qtd, batalhas, herois):
 
 def mutacao(ind, batalhas):
 
-    indsemmutacao = ind.copy()
     while(True):
         h1 = random.choice(ind)
         b1 = random.choice(h1)
@@ -55,17 +58,9 @@ def mutacao(ind, batalhas):
                 h2[h2.index(b2)] = b1
                 break
     
-    verificacao = batalhas.copy()
-    for i in range(len(ind)):
-        verificacao = set(verificacao) - set(ind[i])
-
-    if (verificacao != set()):
-        ind = indsemmutacao
-
     return ind
 
 def evolucao(ngens, indsgen, geracao, batalhas, herois):
-    melhor = [fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]]]
     
     for gen in range(ngens):
     
@@ -79,15 +74,12 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
         for el in sortedgeracao:
             prob.append(el[0]/total)
 
-        if (sortedgeracao[0][0] > melhor[0]):
-            melhor = sortedgeracao[0]
-
         novaGeracao = []
 
-        if (gen % 19 == 0):
-            novaGeracao.append(melhor)
+        novaGeracao.extend(sortedgeracao[:int(indsgen*0.06)])
 
-        for n in range(int(indsgen*0.92)):
+
+        for n in range(int(indsgen*0.86)):
             pai = random.choices(sortedgeracao, prob)[0][1]
             mae = random.choices(sortedgeracao, prob)[0][1]
 
@@ -99,21 +91,14 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
                 verificacao = batalhas.copy()
                 for i in range(len(pai)):
                     if (random.random() < 0.5):
-                        filho.append(pai[i])
+                        filho.append(pai[i].copy())
                     else:
-                        filho.append(mae[i])
+                        filho.append(mae[i].copy())
                     verificacao = set(verificacao) - set(filho[i])
 
 
-            # if (random.random() < 0.2):
-            #     print("Mutação")
-            #     print("Filho: ", filho)
-            #     filho = mutacao(filho, batalhas)
-            #     print("Filho: ", filho)
-            if (filho != melhor[1]):
-                novaGeracao.append([fitness(filho, batalhas, herois), filho])
-            else:
-                gen -= 1
+                if (random.random() < 0.1):
+                    filho = mutacao(filho, batalhas)
             
     
         novaGeracao.extend(randomGen(int(indsgen*0.08), batalhas, herois))
@@ -124,7 +109,7 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
 batalhas = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
 herois = [1.1, 1.2, 1.3, 1.4, 1.5]
 ngens = 1500
-indsgen = 300
+indsgen = 400
 batalhas.sort()
 herois.sort()
 
@@ -176,6 +161,17 @@ geracaofinal.extend(geracao4[:int(indsgen*0.25)])
 
 geracaofinal = evolucao(ngens, indsgen, geracaofinal, batalhas, herois)
 print(geracaofinal[0][1])
+melhor = geracaofinal[0].copy()
+
+for n in range(1000):
+    mutado = mutacao(melhor[1], batalhas)
+    if (fitness(mutado, batalhas, herois) > melhor[0]):
+        melhor[1] = mutado
+        melhor[0] = fitness(mutado, batalhas, herois)
+        print(melhor[0])
+
+print(geracaofinal[0][1])
 print(geracaofinal[0][0])
 print(tempoTotal(geracaofinal[0][1], batalhas, herois))
 print(fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois))
+print(tempoTotal([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois))

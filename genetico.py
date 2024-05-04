@@ -170,25 +170,25 @@ indsgen = 300
 batalhas.sort()
 herois.sort()
 
+
 geracao = randomGen(indsgen, batalhas, herois)
 geracao1 = evolucao(ngens, indsgen, geracao, batalhas, herois)
-#print(geracao1[0][0])
+print(geracao1[0][0])
 geracao1[0] = hillClimbing(geracao1[0], batalhas, herois)
-#print(geracao1[0][0])
+print(geracao1[0][0])
 geracao = randomGen(indsgen, batalhas, herois)
 geracao2 = evolucao(ngens, indsgen, geracao, batalhas, herois)
-#print(geracao2[0][0])
+print(geracao2[0][0])
 geracao2[0] = hillClimbing(geracao2[0], batalhas, herois)
-#print(geracao2[0][0])
-
+print(geracao2[0][0])
 
 geracaofinal = geracao1[:int(indsgen*0.5)]
 geracaofinal.extend(geracao2[:int(indsgen*0.5)])
 
 geracaofinal = evolucao(ngens, indsgen, geracaofinal, batalhas, herois)
-# print("Ultimo da ultima geracao")
-# print(geracaofinal[0][1])
-# print(tempoTotal(geracaofinal[0][1], batalhas, herois))
+print("Ultimo da ultima geracao")
+print(geracaofinal[0][1])
+print(tempoTotal(geracaofinal[0][1], batalhas, herois))
 
 melhor = hillClimbing(geracaofinal[0], batalhas, herois)
 

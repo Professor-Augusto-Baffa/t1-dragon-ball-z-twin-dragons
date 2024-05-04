@@ -41,6 +41,34 @@ def verificaAnt(ind, batalhas, herois):
 
     return True
 
+def hillClimbing(melhor, batalhas, herois):
+    melhorAnt = melhor.copy()
+    melhorTotal = melhor.copy()
+    for n in range(2000):
+
+        mutado = mutacao(copiaListaDeListas(melhor[1]), batalhas)
+
+        if (random.random() < 0.4):
+            num = random.randint(1, 7)
+            for i in range(num):
+                mutado = mutacao(copiaListaDeListas(mutado), batalhas)
+
+        if (n % 30 == 0):
+            if (melhor == melhorAnt):
+                melhor[1] = copiaListaDeListas(mutado)
+                melhor[0] = fitness(melhor[1], batalhas, herois)
+                if (melhor[0] > melhorTotal[0]):
+                    melhorTotal = melhor.copy()
+                melhorAnt = melhor.copy()
+
+        if (fitness(mutado, batalhas, herois) > melhor[0]):
+            melhor[1] = copiaListaDeListas(mutado)
+            melhor[0] = fitness(melhor[1], batalhas, herois)
+    
+    if (melhorTotal[0] > melhor[0]):
+        return melhorTotal
+    return melhor
+
 def randomGen(qtd, batalhas, herois):
     
     geracao = []
@@ -159,7 +187,7 @@ melhores = []
 #melhores.append([fitness([[45, 65, 55, 50], [75, 45, 70, 60, 50], [80, 90, 70, 85, 60], [55, 85, 90, 80, 95], [40, 35, 65, 95, 75]], batalhas, herois), [[45, 65, 55, 50], [75, 45, 70, 60, 50], [80, 90, 70, 85, 60], [55, 85, 90, 80, 95], [40, 35, 65, 95, 75]]])
 #melhores.append([fitness([[45, 65, 55, 50], [75, 45, 70, 60, 50], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]], batalhas, herois), [[45, 65, 55, 50], [75, 45, 70, 60, 50], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]]])
 #melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [70, 85, 55, 90, 80], [60, 80, 95, 85, 90], [40, 35, 65, 95, 75]]])
-melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]]])
+#melhores.append([fitness([[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]], batalhas, herois), [[55, 50, 45, 60], [65, 50, 75, 45, 70], [65, 80, 70, 55, 85], [60, 80, 95, 85, 90], [90, 95, 35, 75, 40]]])
 #melhores.append([fitness(, batalhas, herois), ])
 #melhores.append([fitness(, batalhas, herois), ])
 #melhores.append([fitness(, batalhas, herois), ])
@@ -171,17 +199,25 @@ geracao = randomGen(indsgen, batalhas, herois)
 geracao.extend(melhores)
 geracao1 = evolucao(ngens, indsgen, geracao, batalhas, herois)
 print(geracao1[0][0])
+geracao1[0] = hillClimbing(geracao1[0], batalhas, herois)
+print(geracao1[0][0])
 geracao = randomGen(indsgen, batalhas, herois)
 geracao.extend(melhores)
 geracao2 = evolucao(ngens, indsgen, geracao, batalhas, herois)
+print(geracao2[0][0])
+geracao2[0] = hillClimbing(geracao2[0], batalhas, herois)
 print(geracao2[0][0])
 geracao = randomGen(indsgen, batalhas, herois)
 geracao.extend(melhores)
 geracao3 = evolucao(ngens, indsgen, geracao, batalhas, herois)
 print(geracao3[0][0])
+geracao3[0] = hillClimbing(geracao3[0], batalhas, herois)
+print(geracao3[0][0])
 geracao = randomGen(indsgen, batalhas, herois)
 geracao.extend(melhores)
 geracao4 = evolucao(ngens, indsgen, geracao, batalhas, herois)
+print(geracao4[0][0])
+geracao4[0] = hillClimbing(geracao4[0], batalhas, herois)
 print(geracao4[0][0])
 
 
@@ -195,14 +231,7 @@ print("Ultimo da ultima geracao")
 print(geracaofinal[0][1])
 print(tempoTotal(geracaofinal[0][1], batalhas, herois))
 
-melhor = geracaofinal[0].copy()
-
-for n in range(1000):
-    mutado = mutacao(copiaListaDeListas(melhor[1]), batalhas)
-    if (fitness(mutado, batalhas, herois) > melhor[0] and verificaAnt(mutado, batalhas, herois)):
-        melhor[1] = copiaListaDeListas(mutado)
-        melhor[0] = fitness(mutado, batalhas, herois)
-        print(n)
+melhor = hillClimbing(geracaofinal[0], batalhas, herois)
 
 print("Melhor pos hill climbing")
 print(melhor[0])

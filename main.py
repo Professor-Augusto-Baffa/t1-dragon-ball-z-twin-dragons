@@ -1,7 +1,12 @@
 import auxiliar as aux
+from lutas import randomGen, evolucao, simAnnealing, tempoTotal
 
 # Pedro Gonçalves Mannarino - 2210617
 # Luiza Marcondes Paes Leme - 2210275
+
+# Fácil alteração dos valores de batalhas e heróis
+batalhas = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
+herois = [1.1, 1.2, 1.3, 1.4, 1.5]
 
 # Escolhemos representar as coordenadas do mapa como [x][y], x sendo linha e y coluna
 
@@ -74,3 +79,33 @@ aux.concatenarMapaDinamico(mapaDinamicoFinal)
 
 for linha in mapaDinamicoFinal:
     print(linha)
+
+# Cálculo do tempo da combinação das lutas
+ngens = 1600
+indsgen = 300
+batalhas.sort()
+herois.sort()
+
+geracaoFinal = []
+
+for gens in range(4):
+    geracao = randomGen(indsgen, batalhas, herois)
+    geracao = evolucao(ngens, indsgen, geracao, batalhas, herois)
+    print("Melhor fitness da geracao " + str(gens + 1) + " -> " + str(geracao[0][0]))
+    geracao[0] = simAnnealing(geracao[0], batalhas, herois)
+    print("Melhor fitness da geracao " + str(gens + 1) + " após sim annealing -> " + str(geracao[0][0]))
+    geracaoFinal.extend(geracao[:int(indsgen/4)])
+
+geracaoFinal = evolucao(ngens, indsgen, geracaoFinal, batalhas, herois)
+print("Melhor fitness da última geracao -> " + str(geracaoFinal[0][0]))
+print("Melhor combinação da última geracao -> " + str(geracaoFinal[0][1]))
+print("Melhor tempo da última geração -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
+
+melhor = simAnnealing(geracaoFinal[0], batalhas, herois)
+
+print("Melhor fitness da última geracao após sim annealing -> " + str(geracaoFinal[0][0]))
+print("Melhor combinação da última geracao após sim annealing -> " + str(geracaoFinal[0][1]))
+print("Melhor tempo da última geração após sim annealing -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
+
+
+print("TEMPO TOTAL: " + str(somaTempo + tempoTotal(geracaoFinal[0][1], batalhas, herois)))

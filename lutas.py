@@ -164,31 +164,3 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
         geracao = novaGeracao
 
     return sorted(geracao, key = lambda x: x[0], reverse = True)
-
-batalhas = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
-herois = [1.1, 1.2, 1.3, 1.4, 1.5]
-ngens = 1600
-indsgen = 300
-batalhas.sort()
-herois.sort()
-
-geracaoFinal = []
-
-for gens in range(4):
-    geracao = randomGen(indsgen, batalhas, herois)
-    geracao = evolucao(ngens, indsgen, geracao, batalhas, herois)
-    print("Melhor fitness da geracao " + str(gens + 1) + " -> " + str(geracao[0][0]))
-    geracao[0] = simAnnealing(geracao[0], batalhas, herois)
-    print("Melhor fitness da geracao " + str(gens + 1) + " após sim annealing -> " + str(geracao[0][0]))
-    geracaoFinal.extend(geracao[:int(indsgen/4)])
-
-geracaoFinal = evolucao(ngens, indsgen, geracaoFinal, batalhas, herois)
-print("Melhor fitness da última geracao -> " + str(geracaoFinal[0][0]))
-print("Melhor combinação da última geracao -> " + str(geracaoFinal[0][1]))
-print("Melhor tempo da última geração -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
-
-melhor = simAnnealing(geracaoFinal[0], batalhas, herois)
-
-print("Melhor fitness da última geracao após sim annealing -> " + str(geracaoFinal[0][0]))
-print("Melhor combinação da última geracao após sim annealing -> " + str(geracaoFinal[0][1]))
-print("Melhor tempo da última geração após sim annealing -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))

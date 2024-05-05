@@ -1,4 +1,4 @@
-import math
+import os
 
 # Pedro Gonçalves Mannarino - 2210617
 # Luiza Marcondes Paes Leme - 2210275
@@ -24,6 +24,17 @@ def lerMapa():
     return mapa
 
 
+def agregarMapa(mapaAntigo, mapaNovo):
+    x = 0
+    for linha in mapaNovo:
+        y = 0
+        for char in linha:
+            if (mapaAntigo[x][y] == "?"):
+                mapaAntigo[x][y] = mapaNovo[x][y]
+            y += 1
+        
+        x += 1
+
 def criarMapaDinamico(mapa):
     mapaDinamico = []
     cont = 0
@@ -32,7 +43,7 @@ def criarMapaDinamico(mapa):
         mapaDinamico.append([])
         
         for coluna in linha:
-            mapaDinamico[cont].append("X") 
+            mapaDinamico[cont].append("?") 
 
         cont += 1
 
@@ -40,18 +51,25 @@ def criarMapaDinamico(mapa):
 
 
 def atualizarMapaDinamico(mapaDinamico, caminho, c):
-    x = 0
+    for coord in caminho:
+        mapaDinamico[coord[0]][coord[1]] = c
+        temp = mapaDinamico.copy()
+        concatenarMapaDinamico(temp)
 
-    for linha in mapaDinamico:
-        y = 0
+        for linha in temp:
+            print(linha)
+        os.system('cls')
 
-        for coluna in linha:
-            if ((x, y) in caminho):
-                mapaDinamico[x][y] = c
-            
-            y += 1
 
-        x += 1
+def caminharMapaDinamico(mapaDinamico, x, y, mapa):
+    mapaDinamico[x][y] = mapa[x][y]
+    temp = mapaDinamico.copy()
+    concatenarMapaDinamico(temp)
+
+    for linha in temp:
+        print(linha)
+    print()
+    os.system('cls')
 
 
 def concatenarMapaDinamico(mapaDinamico):
@@ -59,6 +77,7 @@ def concatenarMapaDinamico(mapaDinamico):
     for linha in mapaDinamico:
         mapaDinamico[cont] = ''.join(linha)
         cont += 1
+
 
 def lerLugares():
     with open("lugares.txt", "r") as arq:
@@ -146,6 +165,7 @@ def acharCaminho(coord, c):
         coord = coord.pai
         lista.insert(0, (coord.x, coord.y))
     lista.insert(0, c)
+    lista.insert(0, coord.percorrido)
 
     return lista
         

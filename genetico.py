@@ -18,7 +18,7 @@ def fitness(ind, batalhas, herois):
     valor = 1.4 ** (sum(batalhas) - tempoTotal(ind, batalhas, herois))
     if (not verificaAnt(ind, batalhas, herois)):
         return valor
-    return valor * 100
+    return valor * 10
 
 def copiaListaDeListas(lista):
     nova = []
@@ -41,12 +41,14 @@ def verificaAnt(ind, batalhas, herois):
 
     return True
 
-def hillClimbing(melhor, batalhas, herois):
+def simAnnealing(melhor, batalhas, herois):
 
-    melhorAnt = melhor.copy()
-    melhorTotal = melhor.copy()
+    melhorAnt = [melhor[0]]
+    melhorAnt.append(copiaListaDeListas(melhor[1])) 
+    melhorTotal = [melhor[0]]
+    melhorTotal.append(copiaListaDeListas(melhor[1])) 
 
-    for n in range(5000):
+    for n in range(5500):
 
         mutado = mutacao(copiaListaDeListas(melhor[1]), batalhas)
 
@@ -60,8 +62,10 @@ def hillClimbing(melhor, batalhas, herois):
                 melhor[1] = copiaListaDeListas(mutado)
                 melhor[0] = fitness(melhor[1], batalhas, herois)
                 if (melhor[0] > melhorTotal[0]):
-                    melhorTotal = melhor.copy()
-                melhorAnt = melhor.copy()
+                    melhorTotal = [melhor[0]]
+                    melhorTotal.append(copiaListaDeListas(melhor[1])) 
+                melhorAnt = [melhor[0]]
+                melhorAnt.append(copiaListaDeListas(melhor[1]))
 
         if (fitness(mutado, batalhas, herois) > melhor[0]):
             melhor[1] = copiaListaDeListas(mutado)
@@ -133,8 +137,6 @@ def evolucao(ngens, indsgen, geracao, batalhas, herois):
 
         if ((gen + 1) % 50 == 0):
             novaGeracao.append(melhor)
-        #novaGeracao.extend(sortedgeracao[:int(indsgen*0.06)])
-
 
         for n in range(int(indsgen*0.92)):
             pai = random.choices(sortedgeracao, prob)[0][1]
@@ -170,29 +172,23 @@ indsgen = 300
 batalhas.sort()
 herois.sort()
 
+geracaoFinal = []
 
-geracao = randomGen(indsgen, batalhas, herois)
-geracao1 = evolucao(ngens, indsgen, geracao, batalhas, herois)
-print(geracao1[0][0])
-geracao1[0] = hillClimbing(geracao1[0], batalhas, herois)
-print(geracao1[0][0])
-geracao = randomGen(indsgen, batalhas, herois)
-geracao2 = evolucao(ngens, indsgen, geracao, batalhas, herois)
-print(geracao2[0][0])
-geracao2[0] = hillClimbing(geracao2[0], batalhas, herois)
-print(geracao2[0][0])
+for gens in range(4):
+    geracao = randomGen(indsgen, batalhas, herois)
+    geracao = evolucao(ngens, indsgen, geracao, batalhas, herois)
+    print("Melhor fitness da geracao " + str(gens + 1) + " -> " + str(geracao[0][0]))
+    geracao[0] = simAnnealing(geracao[0], batalhas, herois)
+    print("Melhor fitness da geracao " + str(gens + 1) + " após sim annealing -> " + str(geracao[0][0]))
+    geracaoFinal.extend(geracao[:int(indsgen/4)])
 
-geracaofinal = geracao1[:int(indsgen*0.5)]
-geracaofinal.extend(geracao2[:int(indsgen*0.5)])
+geracaoFinal = evolucao(ngens, indsgen, geracaoFinal, batalhas, herois)
+print("Melhor fitness da última geracao -> " + str(geracaoFinal[0][0]))
+print("Melhor combinação da última geracao -> " + str(geracaoFinal[0][1]))
+print("Melhor tempo da última geração -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
 
-geracaofinal = evolucao(ngens, indsgen, geracaofinal, batalhas, herois)
-print("Ultimo da ultima geracao")
-print(geracaofinal[0][1])
-print(tempoTotal(geracaofinal[0][1], batalhas, herois))
+melhor = simAnnealing(geracaoFinal[0], batalhas, herois)
 
-melhor = hillClimbing(geracaofinal[0], batalhas, herois)
-
-print("Melhor pos hill climbing")
-print(melhor[0])
-print(melhor[1])
-print(tempoTotal(melhor[1], batalhas, herois))
+print("Melhor fitness da última geracao após sim annealing -> " + str(geracaoFinal[0][0]))
+print("Melhor combinação da última geracao após sim annealing -> " + str(geracaoFinal[0][1]))
+print("Melhor tempo da última geração após sim annealing -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))

@@ -18,6 +18,8 @@ caminhos = []
 
 mapaDinamicoFinal = aux.criarMapaDinamico(mapa)
 
+somaTempo = 0
+
 for i in range(len(lugares) - 1):
     try:
         posI, posE = aux.acharPos(mapa, lugares[i], lugares[i + 1])
@@ -56,7 +58,8 @@ for i in range(len(lugares) - 1):
             # for linha in tempMapa:
             #     print(linha)
             # print()
-
+            somaTempo += caminhos[i][0]
+            print("Tempo da caminhada até " + lugares[i+1] + ": " + str(somaTempo))
             break
         
         aux.avaliaVizinhos(mapa, coordAtual, conhecidos)
@@ -68,17 +71,13 @@ for i in range(len(lugares) - 1):
 
         listaAEstrela.sort(key = lambda x : x.percorrido + x.heuristica)
 
-somaTempo = 0
 
+flag = 'Z'
 for caminho in caminhos:
-    char = "\033[1;31m" + caminho[1] +  "\033[0;0m"
-    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], char, aux.screen)
-    somaTempo += caminho[0]
+    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], flag, aux.screen)
+    flag = 'Y' if flag == 'Z' else 'Z' if flag == 'W' else 'W'
 
 aux.concatenarMapaDinamico(mapaDinamicoFinal)
-
-for linha in mapaDinamicoFinal:
-    print(linha)
 
 # Cálculo do tempo da combinação das lutas
 ngens = 1600

@@ -60,7 +60,7 @@ def atualizarMapaDinamico(mapaDinamico, caminho, c , screen):
 
 def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
     mapaDinamico[x][y] = mapa[x][y]
-    imprimirMapa(mapaDinamico, screen)
+    #imprimirMapa(mapaDinamico, screen)
 
 
 def concatenarMapaDinamico(mapaDinamico):
@@ -175,12 +175,20 @@ tileA = pygame.Surface((tile_width, tile_height))
 tileF = pygame.Surface((tile_width, tile_height))
 tileR = pygame.Surface((tile_width, tile_height))
 tilePonto = pygame.Surface((tile_width, tile_height))
+tileElse = pygame.Surface((tile_width, tile_height))
+tileVermelho = pygame.Surface((tile_width, tile_height))
+tileRosa = pygame.Surface((tile_width, tile_height))
+tileLaranja = pygame.Surface((tile_width, tile_height))
 tileX.fill((0, 0, 0))
 tileM.fill((128, 64, 0))
 tileA.fill((0, 191, 255))
 tileF.fill((20, 82, 20))
 tileR.fill((174, 174, 163))
 tilePonto.fill((140, 255, 102))
+tileElse.fill((255, 255, 0))
+tileVermelho.fill((255, 0, 0))
+tileRosa.fill((255, 128, 213))
+tileLaranja.fill((255, 153, 0))
 
 def imprimirMapa(mapa, screen):
     screen.fill((0, 0, 0))
@@ -197,8 +205,16 @@ def imprimirMapa(mapa, screen):
                 screen.blit(tileF, (y * tile_width, x * tile_height))
             elif (mapa[x][y] == "R"):
                 screen.blit(tileR, (y * tile_width, x * tile_height))
-            else:
+            elif (mapa[x][y] == "."):
                 screen.blit(tilePonto, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "Z"):
+                screen.blit(tileVermelho, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "Y"):
+                screen.blit(tileRosa, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "W"):
+                screen.blit(tileLaranja, (y * tile_width, x * tile_height))
+            else:
+                screen.blit(tileElse, (y * tile_width, x * tile_height))
     
     pygame.display.flip()
     pygame.event.pump()

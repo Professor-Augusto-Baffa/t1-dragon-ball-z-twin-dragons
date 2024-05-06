@@ -1,5 +1,8 @@
 import random
 
+# Pedro Gonçalves Mannarino - 2210617
+# Luiza Marcondes Paes Leme - 2210275
+
 # Função que calcula e retorna o tempo total a partir de uma combinação após todas as lutas
 def tempoTotal(ind, batalhas, herois):
     

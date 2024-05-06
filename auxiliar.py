@@ -54,13 +54,13 @@ def criarMapaDinamico(mapa):
 def atualizarMapaDinamico(mapaDinamico, caminho, c , screen):
     for coord in caminho:
         mapaDinamico[coord[0]][coord[1]] = c
-        imprimirMapa(mapaDinamico, screen)
+        #imprimirMapa(mapaDinamico, screen)
         
 
 
 def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
     mapaDinamico[x][y] = mapa[x][y]
-    imprimirMapa(mapaDinamico, screen)
+    #imprimirMapa(mapaDinamico, screen)
 
 
 def concatenarMapaDinamico(mapaDinamico):

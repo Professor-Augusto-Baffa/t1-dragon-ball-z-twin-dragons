@@ -47,7 +47,7 @@ for i in range(len(lugares) - 1):
         if (coordAtual.heuristica == 0):
             caminhos.append(aux.acharCaminho(coordAtual, lugares[i]))
             aux.agregarMapa(mapaDinamicoFinal, mapaDinamico)
-            
+
             somaTempo += caminhos[i][0]
             print("Tempo da caminhada até " + lugares[i+1] + ": " + str(somaTempo))
             break
@@ -70,20 +70,20 @@ for caminho in caminhos:
 aux.concatenarMapaDinamico(mapaDinamicoFinal)
 
 # Cálculo do tempo da combinação das lutas
-ngens = 1600
-indsgen = 300
+ngens = 1200
+indsgen = 100
 batalhas.sort()
 herois.sort()
 
 geracaoFinal = []
 
-for gens in range(4):
+for gens in range(3):
     geracao = randomGen(indsgen, batalhas, herois)
     geracao = evolucao(ngens, indsgen, geracao, batalhas, herois)
     print("Melhor fitness da geracao " + str(gens + 1) + " -> " + str(geracao[0][0]))
     geracao[0] = simAnnealing(geracao[0], batalhas, herois)
     print("Melhor fitness da geracao " + str(gens + 1) + " após sim annealing -> " + str(geracao[0][0]))
-    geracaoFinal.extend(geracao[:int(indsgen/4)])
+    geracaoFinal.extend(geracao[:int(indsgen/3)])
 
 geracaoFinal = evolucao(ngens, indsgen, geracaoFinal, batalhas, herois)
 print("Melhor fitness da última geracao -> " + str(geracaoFinal[0][0]))

@@ -54,22 +54,26 @@ def criarMapaDinamico(mapa):
 def atualizarMapaDinamico(mapaDinamico, caminho, c , screen):
     for coord in caminho:
         mapaDinamico[coord[0]][coord[1]] = c
-        #imprimirMapa(mapaDinamico, screen)
+        imprimirMapa(mapaDinamico, screen)
         
 
-
+# Função que da um passo no mapa dinâmico e atualiza a tela
 def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
+    # Revela aquela posição do mapa dinâmico
     mapaDinamico[x][y] = mapa[x][y]
-    #imprimirMapa(mapaDinamico, screen)
+    
+    # Mostrar o mapa atualizado na interface gráfica
+    #COMENTAR PARA NÃO IMPRIMIR PASSO A PASSO:
+    imprimirMapa(mapaDinamico, screen)
 
-
+# Função que concatena os elementos das linhas do mapa 
 def concatenarMapaDinamico(mapaDinamico):
     cont = 0
     for linha in mapaDinamico:
         mapaDinamico[cont] = ''.join(linha)
         cont += 1
 
-
+# Função que lê arquivo lugares.txt para pegar os caracteres que representam os lugares de evento
 def lerLugares():
     with open("lugares.txt", "r") as arq:
         lugares = [x for x in arq.readline()]

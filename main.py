@@ -1,3 +1,4 @@
+import pygame
 import auxiliar as aux
 from lutas import randomGen, evolucao, simAnnealing, tempoTotal
 
@@ -103,9 +104,10 @@ print("Melhor tempo da última geração -> " + str(tempoTotal(geracaoFinal[0][1
 
 melhor = simAnnealing(geracaoFinal[0], batalhas, herois)
 
-print("Melhor fitness da última geracao após sim annealing -> " + str(geracaoFinal[0][0]))
-print("Melhor combinação da última geracao após sim annealing -> " + str(geracaoFinal[0][1]))
-print("Melhor tempo da última geração após sim annealing -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
+print("Melhor fitness da última geracao após sim annealing -> " + str(melhor[0]))
+print("Melhor combinação da última geracao após sim annealing -> " + str(melhor[1]))
+print("Melhor tempo da última geração após sim annealing -> " + str(tempoTotal(melhor[1], batalhas, herois)))
 
+print("Tempo da caminhada:" + str(somaTempo))
 
-print("TEMPO TOTAL: " + str(somaTempo + tempoTotal(geracaoFinal[0][1], batalhas, herois)))
+print("TEMPO TOTAL: " + str(somaTempo + tempoTotal(melhor[1], batalhas, herois)))

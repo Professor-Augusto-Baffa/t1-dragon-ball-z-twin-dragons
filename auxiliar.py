@@ -24,6 +24,14 @@ def lerMapa():
     return mapa
 
 
+def imprimirMapa(mapaDinamico):
+    temp = mapaDinamico.copy()
+    concatenarMapaDinamico(temp)
+
+    for linha in temp:
+        print(linha)
+    os.system('cls')
+
 def agregarMapa(mapaAntigo, mapaNovo):
     x = 0
     for linha in mapaNovo:
@@ -53,23 +61,13 @@ def criarMapaDinamico(mapa):
 def atualizarMapaDinamico(mapaDinamico, caminho, c):
     for coord in caminho:
         mapaDinamico[coord[0]][coord[1]] = c
-        temp = mapaDinamico.copy()
-        concatenarMapaDinamico(temp)
-
-        for linha in temp:
-            print(linha)
-        os.system('cls')
+        #imprimirMapa(mapaDinamico)
+        
 
 
 def caminharMapaDinamico(mapaDinamico, x, y, mapa):
     mapaDinamico[x][y] = mapa[x][y]
-    temp = mapaDinamico.copy()
-    concatenarMapaDinamico(temp)
-
-    for linha in temp:
-        print(linha)
-    print()
-    os.system('cls')
+    #imprimirMapa(mapaDinamico)
 
 
 def concatenarMapaDinamico(mapaDinamico):
@@ -160,12 +158,13 @@ def avaliaVizinhos(mapa, pai, conhecidos):
 
 def acharCaminho(coord, c):
     lista = [(coord.x, coord.y)]
+    percorrido = coord.percorrido
 
     while (coord.pai != None):
         coord = coord.pai
-        lista.insert(0, (coord.x, coord.y))
+        lista.insert(0, (coord.x, coord.y, coord.percorrido))
     lista.insert(0, c)
-    lista.insert(0, coord.percorrido)
+    lista.insert(0, percorrido)
 
     return lista
         

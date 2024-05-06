@@ -61,7 +61,7 @@ for i in range(len(lugares) - 1):
         # Se ele chegou em seu destino
         if (coordAtual.heuristica == 0):
             # Adiciona o caminho completo que esse coord teve à lista de caminhos
-            caminhos.append(aux.acharCaminho(coordAtual, lugares[i]))
+            caminhos.append(aux.acharCaminho(coordAtual, lugares[i+1]))
 
             # Expande o mapa final com o mapa local
             aux.agregarMapa(mapaDinamicoFinal, mapaDinamico)

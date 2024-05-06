@@ -76,13 +76,6 @@ def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
     # COMENTAR PARA NÃO IMPRIMIR PASSO A PASSO DA EXPLORAÇÃO:
     imprimirMapa(mapaDinamico, screen)
 
-# Função que concatena os elementos das linhas do mapa, fazendo com que não possa mais ser editado
-def concatenarMapaDinamico(mapaDinamico):
-    cont = 0
-    for linha in mapaDinamico:
-        mapaDinamico[cont] = ''.join(linha)
-        cont += 1
-
 # Função que lê arquivo lugares.txt para pegar os caracteres que representam a sequência dos lugares a serem percorridos
 def lerLugares():
     with open("lugares.txt", "r") as arq:

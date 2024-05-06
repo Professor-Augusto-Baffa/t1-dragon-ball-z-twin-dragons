@@ -60,7 +60,7 @@ def atualizarMapaDinamico(mapaDinamico, caminho, c , screen):
 
 def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
     mapaDinamico[x][y] = mapa[x][y]
-    #imprimirMapa(mapaDinamico, screen)
+    imprimirMapa(mapaDinamico, screen)
 
 
 def concatenarMapaDinamico(mapaDinamico):

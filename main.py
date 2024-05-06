@@ -47,17 +47,7 @@ for i in range(len(lugares) - 1):
         if (coordAtual.heuristica == 0):
             caminhos.append(aux.acharCaminho(coordAtual, lugares[i]))
             aux.agregarMapa(mapaDinamicoFinal, mapaDinamico)
-
-            # tempMapa = []
-            # for linha in mapaDinamico:
-            #     tempMapa.append(linha.copy())
-
-            # aux.concatenarMapaDinamico(tempMapa)
-
-            # print()
-            # for linha in tempMapa:
-            #     print(linha)
-            # print()
+            
             somaTempo += caminhos[i][0]
             print("Tempo da caminhada até " + lugares[i+1] + ": " + str(somaTempo))
             break

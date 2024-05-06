@@ -154,7 +154,7 @@ def avaliaVizinho(mapa, pai, conhecidos, x, y):
 
 # Função que encontra o caminho percorrido por uma célula através do traceback pelo seu pai
 def acharCaminho(coord, c):
-    lista = [(coord.x, coord.y)]
+    lista = [(coord.x, coord.y, coord.percorrido)]
     percorrido = coord.percorrido
 
     while (coord.pai != None):

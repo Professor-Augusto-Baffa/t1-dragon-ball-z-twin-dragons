@@ -61,7 +61,7 @@ for i in range(len(lugares) - 1):
         # Se ele chegou em seu destino
         if (coordAtual.heuristica == 0):
             # Adiciona o caminho completo que esse coord teve à lista de caminhos
-            caminhos.append(aux.acharCaminho(coordAtual, lugares[i+1]))
+            caminhos.append(aux.acharCaminho(coordAtual, lugares[i]))
 
             # Expande o mapa final com o mapa local
             aux.agregarMapa(mapaDinamicoFinal, mapaDinamico)
@@ -94,31 +94,44 @@ flag = 'Z'
 # Para cada caminho entre todos os lugares
 for caminho in caminhos:
     # Desenha o caminho usando flag como controle para pintar o caminho de 3 cores diferentes
-    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], flag, aux.screen, caminho[1])
+    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], flag, aux.screen, lugares[lugares.index(caminho[1]) + 1])
     # Alterna entre 3 flags, ou cores, diferentes
     flag = 'Y' if flag == 'Z' else 'Z' if flag == 'W' else 'W'
 
 # Cálculo do tempo da combinação das lutas
+# Número de gerações e indivíduos por geração
 ngens = 1200
 indsgen = 100
+# Ordenar batalhas e heróis para evitar problemas
 batalhas.sort()
 herois.sort()
 
 geracaoFinal = []
 
+# Evoluir 3 populações separadamente
 for gens in range(3):
+    # Inicia com uma geração aleatória
     geracao = randomGen(indsgen, batalhas, herois)
+
+    # Evolui a geração
     geracao = evolucao(ngens, indsgen, geracao, batalhas, herois)
+    
     print("Melhor fitness da geracao " + str(gens + 1) + " -> " + str(geracao[0][0]))
+    
+    # Roda sim annealing no melhor indivíduo da geração
     geracao[0] = simAnnealing(geracao[0], batalhas, herois)
     print("Melhor fitness da geracao " + str(gens + 1) + " após sim annealing -> " + str(geracao[0][0]))
+    
+    # Coloca o melhor terço dessa geração na população final
     geracaoFinal.extend(geracao[:int(indsgen/3)])
 
+# Evolui a população final, combinação de 3 independentes
 geracaoFinal = evolucao(ngens, indsgen, geracaoFinal, batalhas, herois)
 print("Melhor fitness da última geracao -> " + str(geracaoFinal[0][0]))
 print("Melhor combinação da última geracao -> " + str(geracaoFinal[0][1]))
 print("Melhor tempo da última geração -> " + str(tempoTotal(geracaoFinal[0][1], batalhas, herois)))
 
+# Roda sim annealing no melhor indivíduo da geração final
 melhor = simAnnealing(geracaoFinal[0], batalhas, herois)
 
 print("Melhor fitness da última geracao após sim annealing -> " + str(melhor[0]))

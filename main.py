@@ -1,16 +1,15 @@
-import pygame
 import auxiliar as aux
 from lutas import randomGen, evolucao, simAnnealing, tempoTotal
 
 # Pedro Gonçalves Mannarino - 2210617
 # Luiza Marcondes Paes Leme - 2210275
 
+
 # Fácil alteração dos valores de batalhas e heróis
 batalhas = [35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
 herois = [1.1, 1.2, 1.3, 1.4, 1.5]
 
 # Escolhemos representar as coordenadas do mapa como [x][y], x sendo linha e y coluna
-
 mapa = aux.lerMapa()
 
 lugares = aux.lerLugares()
@@ -31,8 +30,8 @@ for i in range(len(lugares) - 1):
     inicio = aux.Coord(posI[0], posI[1], posE, 0, None)
     listaAEstrela = [inicio]
 
-    aux.caminharMapaDinamico(mapaDinamico, inicio.x, inicio.y, mapa)
-    aux.caminharMapaDinamico(mapaDinamico, posE[0], posE[1], mapa)
+    aux.caminharMapaDinamico(mapaDinamico, inicio.x, inicio.y, mapa, aux.screen)
+    aux.caminharMapaDinamico(mapaDinamico, posE[0], posE[1], mapa, aux.screen)
 
     conhecidos = []
 
@@ -63,7 +62,7 @@ for i in range(len(lugares) - 1):
         aux.avaliaVizinhos(mapa, coordAtual, conhecidos)
 
         for filho in coordAtual.filhos:
-            aux.caminharMapaDinamico(mapaDinamico, filho.x, filho.y, mapa)
+            aux.caminharMapaDinamico(mapaDinamico, filho.x, filho.y, mapa, aux.screen)
 
         listaAEstrela.extend(coordAtual.filhos)
 
@@ -73,7 +72,7 @@ somaTempo = 0
 
 for caminho in caminhos:
     char = "\033[1;31m" + caminho[1] +  "\033[0;0m"
-    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], char)
+    aux.atualizarMapaDinamico(mapaDinamicoFinal, caminho[2:], char, aux.screen)
     somaTempo += caminho[0]
 
 aux.concatenarMapaDinamico(mapaDinamicoFinal)

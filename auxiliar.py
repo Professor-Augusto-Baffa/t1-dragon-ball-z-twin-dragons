@@ -1,4 +1,5 @@
 import os
+import pygame
 
 # Pedro Gonçalves Mannarino - 2210617
 # Luiza Marcondes Paes Leme - 2210275
@@ -23,14 +24,6 @@ def lerMapa():
 
     return mapa
 
-
-def imprimirMapa(mapaDinamico):
-    temp = mapaDinamico.copy()
-    concatenarMapaDinamico(temp)
-
-    for linha in temp:
-        print(linha)
-    os.system('cls')
 
 def agregarMapa(mapaAntigo, mapaNovo):
     x = 0
@@ -58,16 +51,16 @@ def criarMapaDinamico(mapa):
     return mapaDinamico
 
 
-def atualizarMapaDinamico(mapaDinamico, caminho, c):
+def atualizarMapaDinamico(mapaDinamico, caminho, c , screen):
     for coord in caminho:
         mapaDinamico[coord[0]][coord[1]] = c
-        #imprimirMapa(mapaDinamico)
+        imprimirMapa(mapaDinamico, screen)
         
 
 
-def caminharMapaDinamico(mapaDinamico, x, y, mapa):
+def caminharMapaDinamico(mapaDinamico, x, y, mapa, screen):
     mapaDinamico[x][y] = mapa[x][y]
-    #imprimirMapa(mapaDinamico)
+    imprimirMapa(mapaDinamico, screen)
 
 
 def concatenarMapaDinamico(mapaDinamico):
@@ -168,4 +161,45 @@ def acharCaminho(coord, c):
 
     return lista
         
+
+pygame.init()
+screen = pygame.display.set_mode((1200, 342))
+clock = pygame.time.Clock()
+
+tile_width = 6
+tile_height = 6
+
+tileX = pygame.Surface((tile_width, tile_height))
+tileM = pygame.Surface((tile_width, tile_height))
+tileA = pygame.Surface((tile_width, tile_height))
+tileF = pygame.Surface((tile_width, tile_height))
+tileR = pygame.Surface((tile_width, tile_height))
+tilePonto = pygame.Surface((tile_width, tile_height))
+tileX.fill((0, 0, 0))
+tileM.fill((128, 64, 0))
+tileA.fill((0, 191, 255))
+tileF.fill((20, 82, 20))
+tileR.fill((174, 174, 163))
+tilePonto.fill((140, 255, 102))
+
+def imprimirMapa(mapa, screen):
+    screen.fill((0, 0, 0))
+
+    for x in range(len(mapa)):
+        for y in range(len(mapa[0])):
+            if (mapa[x][y] == "?"):
+                screen.blit(tileX, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "M"):
+                screen.blit(tileM, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "A"):
+                screen.blit(tileA, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "F"):
+                screen.blit(tileF, (y * tile_width, x * tile_height))
+            elif (mapa[x][y] == "R"):
+                screen.blit(tileR, (y * tile_width, x * tile_height))
+            else:
+                screen.blit(tilePonto, (y * tile_width, x * tile_height))
     
+    pygame.display.flip()
+    pygame.event.pump()
+    clock.tick(60)
